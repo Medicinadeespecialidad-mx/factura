@@ -171,15 +171,21 @@ footer{color:var(--muted);font-size:13px}
           <p class="err" id="monto-err" hidden>Escribe el monto en números.</p>
         </div>
       </div>
-      <div class="field">
-        <label for="forma">Forma de pago</label>
-        <select id="forma" name="forma" required>
-          <option value="03">03 · Transferencia</option>
-          <option value="04">04 · Tarjeta de crédito</option>
-          <option value="28">28 · Tarjeta de débito</option>
-          <option value="01">01 · Efectivo</option>
-          <option value="02">02 · Cheque</option>
-        </select>
+      <div class="row">
+        <div class="field">
+          <label for="forma">Forma de pago</label>
+          <select id="forma" name="forma" required>
+            <option value="03">03 · Transferencia</option>
+            <option value="04">04 · Tarjeta de crédito</option>
+            <option value="28">28 · Tarjeta de débito</option>
+            <option value="01">01 · Efectivo</option>
+            <option value="02">02 · Cheque</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="ref">Referencia o últimos 4 dígitos (opcional)</label>
+          <input id="ref" name="ref" placeholder="Opcional">
+        </div>
       </div>
       <p class="note" id="efectivo" hidden>Los pagos en efectivo no son deducibles como gasto médico. Si quieres deducirlo, conviene pagar con transferencia o tarjeta.</p>
     </fieldset>
@@ -270,6 +276,7 @@ function datos(){
     ["Fecha de pago", `${d}/${m}/${y}`],
     ["Monto", monto.toLocaleString("es-MX",{style:"currency",currency:"MXN"})],
     ["Forma de pago", sel("forma")],
+    ["Referencia", $("ref").value.trim() || "—"],
   ];
 }
 
