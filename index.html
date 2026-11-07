@@ -234,7 +234,7 @@ const guardado = store.get("factura-fiscales");
 if (guardado) FISCALES.forEach(k => { if (guardado[k]) $(k).value = guardado[k]; });
 
 $("rfc").addEventListener("input", e => { e.target.value = e.target.value.toUpperCase().replace(/\s/g,""); });
-$("medico").addEventListener("change", e => { $("medicoOtro").hidden = e.target.value !== "otro"; });
+$("medico").addEventListener("change", e => { $("medicoOtro").hidden = e.target.value !== "otro"; if ($("medicoOtro").hidden) $("medicoOtro-err").hidden = true; });
 $("concepto").addEventListener("change", e => { $("conceptoOtro").hidden = e.target.value !== "otro"; });
 $("forma").addEventListener("change", e => { $("efectivo").hidden = e.target.value !== "01"; });
 
