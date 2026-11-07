@@ -143,7 +143,9 @@ footer{color:var(--muted);font-size:13px}
           <option value="Dra. Tania Torres">Dra. Tania Torres</option>
           <option value="Dra. Gaby López">Dra. Gaby López</option>
           <option value="Alleviare">Alleviare</option>
+          <option value="otro">Otro (escribir)</option>
         </select>
+        <input id="medicoOtro" name="medicoOtro" placeholder="Escribe el nombre de quien te atendió" hidden>
       </div>
       <div class="field">
         <label for="paciente">Nombre del paciente</label>
@@ -226,6 +228,7 @@ const guardado = store.get("factura-fiscales");
 if (guardado) FISCALES.forEach(k => { if (guardado[k]) $(k).value = guardado[k]; });
 
 $("rfc").addEventListener("input", e => { e.target.value = e.target.value.toUpperCase().replace(/\s/g,""); });
+$("medico").addEventListener("change", e => { $("medicoOtro").hidden = e.target.value !== "otro"; });
 $("concepto").addEventListener("change", e => { $("conceptoOtro").hidden = e.target.value !== "otro"; });
 $("forma").addEventListener("change", e => { $("efectivo").hidden = e.target.value !== "01"; });
 
@@ -240,6 +243,7 @@ function validar(){
   ok = check("regimen", !!$("regimen").value) && ok;
   ok = check("correo", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($("correo").value.trim())) && ok;
   ok = check("medico", !!$("medico").value) && ok;
+  if ($("medico").value === "otro") ok = check("medicoOtro", $("medicoOtro").value.trim().length > 2) && ok;
   ok = check("fecha", !!$("fecha").value) && ok;
   ok = check("monto", /^\d+(\.\d{1,2})?$/.test($("monto").value.replace(/[$,\s]/g,""))) && ok;
   if ($("concepto").value === "otro") ok = check("conceptoOtro", $("conceptoOtro").value.trim().length > 2) && ok;
@@ -260,7 +264,7 @@ function datos(){
     ["Correo", $("correo").value.trim()],
     ["Teléfono", $("tel").value.trim() || "—"],
     ["Pago"],
-    ["Atendido por", $("medico").value],
+    ["Atendido por", $("medico").value === "otro" ? $("medicoOtro").value.trim() : $("medico").value],
     ["Paciente", $("paciente").value.trim() || "El mismo titular"],
     ["Concepto", concepto],
     ["Fecha de pago", `${d}/${m}/${y}`],
