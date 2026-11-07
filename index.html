@@ -140,12 +140,10 @@ footer{color:var(--muted);font-size:13px}
         <label for="medico">¿Quién te atendió?</label>
         <select id="medico" name="medico" required>
           <option value="">Elige una opción</option>
-          <option value="Dra. Tania Torres">Dra. Tania Torres</option>
-          <option value="Dra. Gaby López">Dra. Gaby López</option>
+          <option value="otro">Un especialista</option>
           <option value="Alleviare">Alleviare</option>
-          <option value="otro">Otro (escribir)</option>
         </select>
-        <input id="medicoOtro" name="medicoOtro" placeholder="Escribe el nombre de quien te atendió" hidden>
+        <input id="medicoOtro" name="medicoOtro" placeholder="Nombre del médico que te atendió" hidden>
       </div>
       <div class="field">
         <label for="paciente">Nombre del paciente</label>
@@ -221,14 +219,14 @@ const SHEET_URL = "https://script.google.com/macros/s/AKfycbzBnsAGyXmd8AOOomcSHV
 // Número de WhatsApp que recibe los datos (con 52 de México). Vacío = el paciente elige el contacto.
 // También se puede poner en el enlace: ...#5215512345678 o ?wa=5215512345678
 const WHATSAPP = "";
-// ?para=tania | gaby | alleviare deja preseleccionado quién atendió.
+// ?para=especialista | alleviare deja preseleccionado quién atendió.
 const QS = new URLSearchParams(location.search);
-const PARA = {tania:"Dra. Tania Torres", gaby:"Dra. Gaby López", alleviare:"Alleviare"};
+const PARA = {especialista:"otro", alleviare:"Alleviare"};
 const $ = id => document.getElementById(id);
 const store = {get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
 const FISCALES = ["rfc","nombre","cp","regimen","uso","correo","tel"];
 
-if (PARA[(QS.get("para")||"").toLowerCase()]) document.getElementById("medico").value = PARA[QS.get("para").toLowerCase()];
+if (PARA[(QS.get("para")||"").toLowerCase()]) { document.getElementById("medico").value = PARA[QS.get("para").toLowerCase()]; document.getElementById("medicoOtro").hidden = document.getElementById("medico").value !== "otro"; }
 $("fecha").value = new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
 const guardado = store.get("factura-fiscales");
 if (guardado) FISCALES.forEach(k => { if (guardado[k]) $(k).value = guardado[k]; });
@@ -270,7 +268,7 @@ function datos(){
     ["Correo", $("correo").value.trim()],
     ["Teléfono", $("tel").value.trim() || "—"],
     ["Pago"],
-    ["Atendido por", $("medico").value === "otro" ? $("medicoOtro").value.trim() : $("medico").value],
+    ["Atendido por", $("medico").value === "otro" ? "Especialista: " + $("medicoOtro").value.trim() : $("medico").value],
     ["Paciente", $("paciente").value.trim() || "El mismo titular"],
     ["Concepto", concepto],
     ["Fecha de pago", `${d}/${m}/${y}`],
